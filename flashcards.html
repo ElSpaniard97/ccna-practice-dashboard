@@ -30,17 +30,14 @@
       display:block;padding:10px 14px;border-radius:6px;color:#d1d5db;text-decoration:none;
     }
     .nav a:hover, .nav a.active {background:rgba(255,255,255,0.1);color:#fff;}
-    .main {padding:20px;overflow:auto;}
+    .main {padding:20px;overflow:auto;text-align:center;}
     h2 {margin-bottom:16px;}
     select {
       padding:8px;border:1px solid #ccc;border-radius:6px;margin-bottom:20px;
       font-size:1rem;
     }
-    .flashcard-container {
-      display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
-    }
     .flashcard {
-      width:280px;height:180px;perspective:1000px;cursor:pointer;
+      width:320px;height:200px;perspective:1000px;cursor:pointer;margin:0 auto;
     }
     .inner {
       position:relative;width:100%;height:100%;transition:transform 0.6s;
@@ -60,8 +57,16 @@
       font-size:0.95rem;
     }
     .front {font-weight:600;font-size:1rem;}
+    .controls {
+      margin-top:24px;display:flex;justify-content:center;gap:12px;
+    }
+    .controls button {
+      padding:10px 20px;font-size:1rem;border:none;border-radius:6px;
+      cursor:pointer;background:var(--accent);color:white;transition:background 0.2s;
+    }
+    .controls button:hover {background:#1d4ed8;}
     .footer {
-      text-align:center;margin-top:24px;color:var(--muted);
+      text-align:center;margin-top:16px;color:var(--muted);
       font-size:0.9rem;
     }
   </style>
@@ -82,18 +87,36 @@
     <select id="sectionSelect">
       <option value="">-- Choose Section --</option>
     </select>
-    <div class="flashcard-container" id="flashcards"></div>
-    <div class="footer">Click any flashcard to flip and reveal the answer.</div>
+
+    <div id="flashcardArea"></div>
+
+    <div class="controls" style="display:none;" id="controls">
+      <button id="prevBtn">Previous</button>
+      <button id="flipBtn">Flip</button>
+      <button id="nextBtn">Next</button>
+      <button id="shuffleBtn">Shuffle</button>
+    </div>
+
+    <div class="footer">Click "Flip" or the card to reveal the answer.</div>
   </main>
 
   <script type="module">
-    import { SECTIONS } from './questions-data.js';
+    import { QUESTIONS_SECTIONS } from './questions-data.js';
 
     const sectionSelect = document.getElementById('sectionSelect');
-    const flashcards = document.getElementById('flashcards');
+    const flashcardArea = document.getElementById('flashcardArea');
+    const controls = document.getElementById('controls');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
 
-    // Populate dropdown with section titles
-    Object.values(SECTIONS).forEach(sec=>{
+    let currentSection = null;
+    let cards = [];
+    let index = 0;
+
+    // Populate section dropdown
+    QUESTIONS_SECTIONS.forEach(sec=>{
       const opt=document.createElement('option');
       opt.value=sec.id;
       opt.textContent=sec.title;
@@ -101,23 +124,44 @@
     });
 
     sectionSelect.addEventListener('change', ()=>{
-      flashcards.innerHTML='';
-      const id=sectionSelect.value;
-      if(!id)return;
-      const section=Object.values(SECTIONS).find(s=>s.id===id);
-      if(!section)return;
+      const id = sectionSelect.value;
+      if(!id){ flashcardArea.innerHTML=''; controls.style.display='none'; return; }
+      currentSection = QUESTIONS_SECTIONS.find(s=>s.id===id);
+      cards = [...currentSection.items];
+      index = 0;
+      controls.style.display='flex';
+      renderCard();
+    });
 
-      section.items.forEach((q,i)=>{
-        const card=document.createElement('div');
-        card.className='flashcard';
-        card.innerHTML=`
+    function renderCard(){
+      if(!cards.length) return;
+      const q = cards[index];
+      flashcardArea.innerHTML = `
+        <div class="flashcard" id="card">
           <div class="inner">
-            <div class="front">${i+1}. ${q.q}</div>
-            <div class="back">${q.options[q.answer]}<br><br><em>${q.explanation}</em></div>
-          </div>`;
-        card.addEventListener('click',()=>card.classList.toggle('flipped'));
-        flashcards.appendChild(card);
-      });
+            <div class="front">${index+1}. ${q.q}</div>
+            <div class="back"><strong>${q.options[q.answer]}</strong><br><br><em>${q.explanation}</em></div>
+          </div>
+        </div>
+        <p style="margin-top:10px;color:var(--muted)">Card ${index+1} of ${cards.length}</p>`;
+      const card = document.getElementById('card');
+      card.addEventListener('click', ()=>card.classList.toggle('flipped'));
+    }
+
+    prevBtn.addEventListener('click', ()=>{
+      if(index>0){ index--; renderCard(); }
+    });
+    nextBtn.addEventListener('click', ()=>{
+      if(index<cards.length-1){ index++; renderCard(); }
+    });
+    flipBtn.addEventListener('click', ()=>{
+      const card = document.getElementById('card');
+      if(card) card.classList.toggle('flipped');
+    });
+    shuffleBtn.addEventListener('click', ()=>{
+      cards = cards.sort(()=>Math.random()-0.5);
+      index = 0;
+      renderCard();
     });
   </script>
 </body>
