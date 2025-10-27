@@ -1,2 +1,36 @@
-// Placeholder for ip-connectivity.js
-export const DATA = [];
+export const IP_CONNECTIVITY = {
+  id: 'ipconn',
+  title: 'IP Connectivity',
+  items: [
+    { q:'Which device forwards packets between networks?', options:['Switch','Bridge','Router','Hub'], answer:2, explanation:'Routers connect separate networks using IP addressing.' },
+    { q:'Command to show the routing table?', options:['show ip route','show interfaces','show ip config','show version'], answer:0, explanation:'Displays all known routes and next hops.' },
+    { q:'Administrative distance of OSPF?', options:['90','100','110','120'], answer:2, explanation:'OSPF has an AD of 110.' },
+    { q:'Administrative distance of static routes?', options:['0','1','90','120'], answer:1, explanation:'Static routes have AD of 1.' },
+    { q:'RIP uses which metric?', options:['Cost','Bandwidth','Hop count','Delay'], answer:2, explanation:'RIP counts hops up to a maximum of 15.' },
+    { q:'Enable OSPF process 1?', options:['router ospf 1','ospf start 1','ip ospf 1','enable ospf'], answer:0, explanation:'Global config command to start OSPF process 1.' },
+    { q:'Command to advertise 192.168.1.0/24 in OSPF?', options:['network 192.168.1.0 0.0.0.255 area 0','ospf advertise 192.168.1.0','set ospf network','ip ospf area 0'], answer:0, explanation:'Defines a network for OSPF area 0.' },
+    { q:'Purpose of a default route?', options:['Route to unknown destinations','Assign IPs','Encrypt packets','Reduce collisions'], answer:0, explanation:'Default route is used when no specific route exists.' },
+    { q:'Show connected networks?', options:['show ip route connected','show ip interfaces','show network','show ospf'], answer:0, explanation:'Displays directly connected routes.' },
+    { q:'EIGRP uses which algorithm?', options:['SPF','DUAL','Bellman-Ford','BGP'], answer:1, explanation:'EIGRP uses the Diffusing Update Algorithm.' },
+    { q:'OSPF uses which algorithm?', options:['DUAL','Dijkstra SPF','Bellman-Ford','Flooding'], answer:1, explanation:'OSPF runs the Shortest Path First algorithm.' },
+    { q:'Purpose of TTL field?', options:['Time tracking','Prevent routing loops','Authentication','QoS tagging'], answer:1, explanation:'TTL decrements each hop to prevent infinite looping.' },
+    { q:'Router learns multiple paths to a network. Which is chosen?', options:['Longest prefix match','Lowest AD','Random','First learned'], answer:0, explanation:'Routing decisions always use longest prefix match first.' },
+    { q:'Default gateway purpose?', options:['Route outside local subnet','Assign IP','Filter traffic','Map MACs'], answer:0, explanation:'Default gateway routes to non-local networks.' },
+    { q:'Ping uses which protocol?', options:['ICMP','UDP','TCP','DNS'], answer:0, explanation:'Ping uses ICMP echo requests and replies.' },
+    { q:'Traceroute determines path using...', options:['ICMP TTL expiry','TCP SYN','ARP','DNS lookups'], answer:0, explanation:'Traceroute relies on ICMP TTL expiry messages.' },
+    { q:'What does “S*” mean in routing table?', options:['Static default route','Dynamic route','Summary route','Stub network'], answer:0, explanation:'S* indicates a static default route.' },
+    { q:'Purpose of split horizon?', options:['Prevent routing loops','Encrypt updates','Speed convergence','Balance load'], answer:0, explanation:'Prevents a route from being advertised back out the interface it came from.' },
+    { q:'Which routing protocol is classless?', options:['RIPv1','RIPv2','IGRP','All'], answer:1, explanation:'RIPv2 supports VLSM and CIDR.' },
+    { q:'Command to test reachability?', options:['ping','trace','show ip route','show interfaces'], answer:0, explanation:'Ping verifies IP-level connectivity.' },
+    { q:'Connected route AD value?', options:['0','1','90','120'], answer:0, explanation:'Directly connected networks have AD 0.' },
+    { q:'Purpose of OSPF areas?', options:['Organize and limit LSA flooding','Increase broadcast domains','Disable STP','Segment VLANs'], answer:0, explanation:'Areas reduce overhead and improve scalability.' },
+    { q:'Default reference bandwidth for OSPF?', options:['10 Mbps','100 Mbps','1 Gbps','10 Gbps'], answer:1, explanation:'Default is 100 Mbps for cost calculation.' },
+    { q:'OSPF packet type for neighbor discovery?', options:['Hello','LSA','LSU','LSAck'], answer:0, explanation:'Hello packets establish adjacency.' },
+    { q:'EIGRP uses which transport protocol?', options:['TCP','UDP','IP directly','ICMP'], answer:2, explanation:'EIGRP encapsulates directly in IP (protocol 88).' },
+    { q:'RIP port number?', options:['UDP 520','TCP 520','UDP 69','TCP 179'], answer:0, explanation:'RIP uses UDP port 520.' },
+    { q:'Purpose of BGP?', options:['Interior routing','Exterior gateway between ASes','DHCP relay','DNS updates'], answer:1, explanation:'BGP exchanges routes between autonomous systems.' },
+    { q:'Command to clear routing table?', options:['clear ip route *','delete routes','reset route','clear routes all'], answer:0, explanation:'Clears dynamic routes from the table.' },
+    { q:'Which routing protocol is link-state?', options:['OSPF','RIP','EIGRP','BGP'], answer:0, explanation:'OSPF and IS-IS are link-state protocols.' },
+    { q:'Command to view OSPF neighbors?', options:['show ip ospf neighbor','show ospf','show ip ospf interface','show neighbors'], answer:0, explanation:'Lists neighbors and their states.' }
+  ]
+};
