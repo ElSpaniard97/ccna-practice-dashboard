@@ -202,7 +202,7 @@
         <a href="questions.html">Practice Test</a>
       </div>
       <div class="bottom">
-        <button id="syncQuestions">Sync from Questions (coming soon)</button>
+        <button id="syncQuestions">Sync from Questions</button>
         <button id="clearAll">Clear All Data</button>
       </div>
     </aside>
@@ -252,8 +252,10 @@
     </main>
   </div>
 
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
-    // Load stored results
     const STORAGE_KEY = 'ccna_results_v1';
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
@@ -263,6 +265,12 @@
     const kpiWeak = document.getElementById('kpiWeak');
     const recList = document.getElementById('recList');
     const tbody = document.getElementById('resultsBody');
+
+    const ctxTrend = document.getElementById('trendChart');
+    const ctxSection = document.getElementById('sectionChart');
+
+    let trendChart = null;
+    let sectionChart = null;
 
     function refreshDashboard() {
       if (!data.length) return;
@@ -277,7 +285,8 @@
       });
 
       const sectionAverages = Object.entries(sectionScores).map(([sec,arr])=>({
-        section:sec, avg:arr.reduce((a,b)=>a+b,0)/arr.length
+        section:sec,
+        avg:arr.reduce((a,b)=>a+b,0)/arr.length
       }));
 
       const best = sectionAverages.reduce((a,b)=>a.avg>b.avg?a:b);
@@ -303,36 +312,58 @@
           <h4>${s.section}</h4>
           <p>Average: ${Math.round(s.avg)}%</p>
           <ul>
-            <li>Review related commands</li>
-            <li>Retake section practice</li>
-            <li>Focus on weak topics</li>
+            <li>Review commands for ${s.section}</li>
+            <li>Retake section test</li>
+            <li>Watch tutorials or labs</li>
           </ul>
         </div>`).join('');
     }
 
     function drawCharts(allResults, sectionAverages) {
-      const ctx1 = document.getElementById('trendChart').getContext('2d');
-      const ctx2 = document.getElementById('sectionChart').getContext('2d');
-
-      // Basic line chart (trend)
       const scores = allResults.map(r=>r.score);
-      ctx1.clearRect(0,0,ctx1.canvas.width,ctx1.canvas.height);
-      ctx1.beginPath();
-      ctx1.moveTo(0,300 - scores[0]*3);
-      scores.forEach((s,i)=>ctx1.lineTo(i*10,300 - s*3));
-      ctx1.strokeStyle = '#2563eb';
-      ctx1.lineWidth = 2;
-      ctx1.stroke();
+      const labels = allResults.map(r=>r.label || `Test ${r.date}`);
 
-      // Bar chart by section
-      ctx2.clearRect(0,0,ctx2.canvas.width,ctx2.canvas.height);
-      const barW = 40, gap = 20;
-      sectionAverages.forEach((s,i)=>{
-        const h = (s.avg/100)*250;
-        ctx2.fillStyle = '#2563eb';
-        ctx2.fillRect(40 + i*(barW+gap), 280-h, barW, h);
-        ctx2.fillStyle = '#000';
-        ctx2.fillText(s.section.slice(0,6), 40 + i*(barW+gap), 295);
+      if (trendChart) trendChart.destroy();
+      if (sectionChart) sectionChart.destroy();
+
+      trendChart = new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Score (%)',
+            data: scores,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37,99,235,0.15)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2,
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: { y: { beginAtZero: true, max: 100 } },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      sectionChart = new Chart(ctxSection, {
+        type: 'bar',
+        data: {
+          labels: sectionAverages.map(s=>s.section),
+          datasets: [{
+            label: 'Average Accuracy (%)',
+            data: sectionAverages.map(s=>s.avg),
+            backgroundColor: '#60a5fa',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: { y: { beginAtZero: true, max: 100 } },
+          plugins: { legend: { display: false } }
+        }
       });
     }
 
