@@ -5,152 +5,176 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CCNA Practice Test</title>
   <style>
-    :root {
-      --sidebar:#1f2937;
-      --sidebar-dark:#111827;
-      --header:#111827;
-      --main-bg:#f5f6fa;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --ok:#10b981;
-      --bad:#ef4444;
+    :root{
+      --sidebar:#1f2937; --sidebar-dark:#111827; --header:#111827;
+      --bg:#f5f6fa; --card:#ffffff; --text:#111827; --muted:#6b7280; --accent:#2563eb;
       --shadow:0 2px 8px rgba(0,0,0,0.05);
     }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:var(--main-bg);color:var(--text);}
-    .app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;grid-template-areas:"sidebar header" "sidebar main";height:100vh;}
+    [data-theme="dark"]{
+      --sidebar:#111827; --sidebar-dark:#0f172a; --header:#0f172a;
+      --bg:#0d1117; --card:#1e293b; --text:#e5e7eb; --muted:#94a3b8;
+      --shadow:0 2px 8px rgba(0,0,0,0.3);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;transition:background-color .3s,color .3s;}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);}
 
-    /* Sidebar */
-    .sidebar{grid-area:sidebar;background:linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));color:#e5e7eb;display:flex;flex-direction:column;}
+    .app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;
+         grid-template-areas:"sidebar header" "sidebar main";height:100vh;}
+    .sidebar{grid-area:sidebar;background:linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));
+             color:#e5e7eb;display:flex;flex-direction:column;}
     .brand{padding:16px;font-size:1.1rem;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.1);}
     .nav{flex:1;padding:12px;}
-    .nav a{display:block;padding:10px 14px;border-radius:6px;color:#d1d5db;text-decoration:none;transition:background .2s;}
+    .nav a{display:block;padding:10px 14px;border-radius:6px;color:#d1d5db;text-decoration:none;}
     .nav a:hover,.nav a.active{background:rgba(255,255,255,0.1);color:#fff;}
-
-    /* Header */
-    .header{grid-area:header;background:var(--header);color:#e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
-    .header .right{display:flex;gap:10px;align-items:center;}
-    .btn{background:#fff;border:1px solid #ddd;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.9rem;}
-    .btn.primary{background:var(--accent);border:none;color:white;}
-
-    /* Main content */
-    .main{grid-area:main;padding:20px;overflow-y:auto;}
+    .bottom{padding:12px;border-top:1px solid rgba(255,255,255,0.1);}
+    .header{grid-area:header;background:var(--header);color:#e5e7eb;display:flex;align-items:center;
+            justify-content:space-between;padding:0 20px;}
+    .toggle{background:none;border:1px solid rgba(255,255,255,0.3);color:#e5e7eb;
+            padding:6px 12px;border-radius:6px;cursor:pointer;}
+    .main{grid-area:main;padding:20px;overflow:auto;}
     .card{background:var(--card);border-radius:8px;padding:16px;box-shadow:var(--shadow);margin-bottom:20px;}
-    h3{margin-bottom:10px;}
-    select,input{padding:6px 10px;margin:5px 0;border:1px solid #ddd;border-radius:6px;}
-    label{font-size:0.9rem;margin-right:8px;}
-    .question{margin-bottom:15px;}
-    .options label{display:block;padding:6px 10px;border:1px solid #ddd;border-radius:6px;margin:4px 0;cursor:pointer;}
-    .options label.correct{background:#d1fae5;border-color:#10b981;}
-    .options label.wrong{background:#fee2e2;border-color:#ef4444;}
-    .hidden{display:none;}
-    #status{margin:10px 0;color:var(--muted);}
+    h2{margin-bottom:10px}
+    label{font-size:.95rem;margin:0 8px 0 0}
+    select,input{padding:8px;border:1px solid #ddd;border-radius:6px;margin:6px 10px 6px 0}
+    .btn{padding:8px 14px;border:none;border-radius:6px;background:var(--accent);color:#fff;cursor:pointer}
+    .btn.secondary{background:#64748b}
+    .question{margin:16px 0}
+    .options label{display:block;padding:8px 10px;border:1px solid #ddd;border-radius:6px;margin:6px 0;cursor:pointer}
+    .options label.correct{background:#d1fae5;border-color:#10b981}
+    .options label.wrong{background:#fee2e2;border-color:#ef4444}
+    .row{display:grid;grid-template-columns:1fr;gap:16px}
+    #status{color:var(--muted);margin-top:6px}
+
+    /* Loader */
+    .loader{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;
+            justify-content:center;backdrop-filter:blur(2px);visibility:hidden;z-index:999}
+    .loader.show{visibility:visible}
+    .spinner{width:60px;height:60px;border:6px solid #cbd5e1;border-top-color:var(--accent);
+             border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
     @media(max-width:900px){.app{grid-template-columns:0 1fr}.sidebar{display:none}}
   </style>
 </head>
-
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="brand">CCNA Practice</div>
+      <div class="brand">CCNA Dashboard</div>
       <div class="nav">
-  <a href="index.html" class="active">Dashboard</a>
-  <a href="questions.html">Practice Test</a>
-  <a href="flashcards.html">Flashcards</a>
-</div>
+        <a href="index.html">Dashboard</a>
+        <a href="questions.html" class="active">Practice Test</a>
+        <a href="flashcards.html">Flashcards</a>
+      </div>
+      <div class="bottom"></div>
     </aside>
 
     <header class="header">
       <h2>Practice Test</h2>
-      <div class="right">
-        <button id="saveProgress" class="btn">Save Progress</button>
-        <button id="loadProgress" class="btn">Load Progress</button>
-      </div>
+      <button id="themeToggle" class="toggle">🌙</button>
     </header>
 
     <main class="main">
-      <div class="card">
-        <h3>Setup Test</h3>
-        <label>Section:</label>
-        <select id="sectionSelect"></select>
-        <label>Mode:</label>
-        <select id="modeSelect">
-          <option value="study">Study Mode</option>
-          <option value="exam">Exam Mode</option>
-        </select>
-        <label>Number of Questions:</label>
-        <input type="number" id="questionCount" value="30" min="1" max="30">
-        <button id="startBtn" class="btn primary">Start Test</button>
-      </div>
+      <section class="card">
+        <h3>Setup</h3>
+        <div class="row">
+          <div>
+            <label>Section:</label>
+            <select id="sectionSelect"></select>
+            <label>Mode:</label>
+            <select id="modeSelect">
+              <option value="study">Study</option>
+              <option value="exam">Exam</option>
+            </select>
+            <label>Questions:</label>
+            <input type="number" id="questionCount" value="30" min="1" max="30" />
+            <button id="startBtn" class="btn">Start</button>
+            <button id="saveProgress" class="btn secondary">Save</button>
+            <button id="loadProgress" class="btn secondary">Load</button>
+          </div>
+        </div>
+      </section>
 
-      <div id="quizArea" class="card hidden">
+      <section id="quizArea" class="card" style="display:none">
         <div id="status"></div>
         <div id="questionContainer"></div>
-        <button id="finishBtn" class="btn primary hidden">Finish & Save Result</button>
-      </div>
+        <button id="finishBtn" class="btn" style="display:none">Finish & Save Result</button>
+      </section>
     </main>
   </div>
 
-  <!-- Load modular question data -->
+  <div class="loader" id="loader"><div class="spinner"></div></div>
+
   <script type="module">
     import { QUESTIONS_SECTIONS } from './questions-data.js';
-    const STORAGE_KEY = 'ccna_results_v1';
-    const sectionSelect = document.getElementById('sectionSelect');
-    const modeSelect = document.getElementById('modeSelect');
-    const countInput = document.getElementById('questionCount');
-    const startBtn = document.getElementById('startBtn');
-    const quizArea = document.getElementById('quizArea');
-    const questionContainer = document.getElementById('questionContainer');
-    const finishBtn = document.getElementById('finishBtn');
-    const statusDiv = document.getElementById('status');
-    const saveBtn = document.getElementById('saveProgress');
-    const loadBtn = document.getElementById('loadProgress');
 
-    let currentSection = null;
-    let currentMode = 'study';
-    let questions = [];
-    let currentAnswers = {};
+    /* Theme */
+    const toggle=document.getElementById('themeToggle');
+    const savedTheme=localStorage.getItem('theme')||'light';
+    if(savedTheme==='dark'){document.documentElement.setAttribute('data-theme','dark');toggle.textContent='☀️';}
+    toggle.addEventListener('click',()=>{
+      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+      if(isDark){document.documentElement.removeAttribute('data-theme');toggle.textContent='🌙';localStorage.setItem('theme','light');}
+      else{document.documentElement.setAttribute('data-theme','dark');toggle.textContent='☀️';localStorage.setItem('theme','dark');}
+    });
 
-    // Populate section dropdown
-    QUESTIONS_SECTIONS.forEach(sec => {
-      const opt = document.createElement('option');
-      opt.value = sec.id;
-      opt.textContent = sec.title;
+    /* Loader helper */
+    const loader=document.getElementById('loader');
+    const showLoader=(on)=>loader.classList.toggle('show',on);
+
+    /* Elements */
+    const STORAGE_KEY='ccna_results_v1';
+    const sectionSelect=document.getElementById('sectionSelect');
+    const modeSelect=document.getElementById('modeSelect');
+    const countInput=document.getElementById('questionCount');
+    const startBtn=document.getElementById('startBtn');
+    const quizArea=document.getElementById('quizArea');
+    const questionContainer=document.getElementById('questionContainer');
+    const finishBtn=document.getElementById('finishBtn');
+    const statusDiv=document.getElementById('status');
+    const saveBtn=document.getElementById('saveProgress');
+    const loadBtn=document.getElementById('loadProgress');
+
+    let currentSection=null;
+    let currentMode='study';
+    let questions=[];
+    let currentAnswers={};
+
+    // Populate sections
+    QUESTIONS_SECTIONS.forEach(sec=>{
+      const opt=document.createElement('option');
+      opt.value=sec.id; opt.textContent=sec.title;
       sectionSelect.appendChild(opt);
     });
 
-    // Start test
-    startBtn.onclick = () => {
-      const secId = sectionSelect.value;
-      const selected = QUESTIONS_SECTIONS.find(s=>s.id===secId);
-      if (!selected) return alert('Please select a section.');
-      currentSection = selected;
-      currentMode = modeSelect.value;
-      const count = Math.min(parseInt(countInput.value)||30, selected.items.length);
-      questions = [...selected.items].sort(()=>0.5-Math.random()).slice(0,count);
-      currentAnswers = {};
-      showQuestions();
+    startBtn.onclick=()=>{
+      const secId=sectionSelect.value;
+      const selected=QUESTIONS_SECTIONS.find(s=>s.id===secId);
+      if(!selected){alert('Please select a section.');return;}
+      currentSection=selected;
+      currentMode=modeSelect.value;
+      const count=Math.min(parseInt(countInput.value)||30, selected.items.length);
+      questions=[...selected.items].sort(()=>Math.random()-0.5).slice(0,count);
+      currentAnswers={};
+      showLoader(true);
+      setTimeout(()=>{renderQuestions();showLoader(false);},300);
     };
 
-    function showQuestions(){
-      quizArea.classList.remove('hidden');
-      finishBtn.classList.remove('hidden');
-      questionContainer.innerHTML = '';
+    function renderQuestions(){
+      quizArea.style.display='block';
+      finishBtn.style.display='inline-block';
+      questionContainer.innerHTML='';
       questions.forEach((q,idx)=>{
-        const div = document.createElement('div');
-        div.className = 'question';
-        div.innerHTML = `<h4>Q${idx+1}. ${q.q}</h4>`;
-        const opts = document.createElement('div');
-        opts.className = 'options';
+        const div=document.createElement('div');
+        div.className='question';
+        div.innerHTML=`<h4>Q${idx+1}. ${q.q}</h4>`;
+        const opts=document.createElement('div'); opts.className='options';
         q.options.forEach((opt,i)=>{
-          const id = `q${idx}_opt${i}`;
-          const label = document.createElement('label');
+          const id=`q${idx}_opt${i}`;
+          const label=document.createElement('label');
           label.setAttribute('for',id);
-          label.textContent = opt;
-          const input = document.createElement('input');
-          input.type='radio';input.name=`q${idx}`;input.value=i;input.id=id;
+          label.textContent=opt;
+          const input=document.createElement('input');
+          input.type='radio'; input.name=`q${idx}`; input.value=i; input.id=id;
           input.onchange=()=>handleAnswer(idx,i,q.answer);
           label.prepend(input);
           opts.appendChild(label);
@@ -164,7 +188,7 @@
     function handleAnswer(qIndex,choice,correct){
       currentAnswers[qIndex]=choice;
       if(currentMode==='study'){
-        const qDiv = questionContainer.children[qIndex];
+        const qDiv=questionContainer.children[qIndex];
         qDiv.querySelectorAll('label').forEach((lbl,i)=>{
           lbl.classList.remove('correct','wrong');
           if(i===correct) lbl.classList.add('correct');
@@ -175,31 +199,26 @@
     }
 
     function updateStatus(){
-      const answered = Object.keys(currentAnswers).length;
-      statusDiv.textContent = `Answered ${answered}/${questions.length}`;
+      const answered=Object.keys(currentAnswers).length;
+      statusDiv.textContent=`Answered ${answered}/${questions.length}`;
     }
 
-    finishBtn.onclick = ()=>{
-      const answered = Object.keys(currentAnswers).length;
-      if(answered < questions.length && !confirm('Some questions are unanswered. Finish anyway?')) return;
-      let correct = 0;
-      questions.forEach((q,i)=>{ if(currentAnswers[i]===q.answer) correct++; });
-      const score = Math.round((correct/questions.length)*100);
-      const date = new Date().toLocaleDateString();
-      const modeLabel = currentMode==='study'?'Study':'Exam';
-      const entry = {
-        date,
-        label: `${currentSection.title}`,
-        mode: modeLabel,
-        section: currentSection.title,
-        score,
-        notes: `Answered ${answered}/${questions.length}`
-      };
-      const all = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-      all.push(entry);
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
-      alert(`Test completed! Score: ${score}%`);
-      window.location.href='index.html';
+    finishBtn.onclick=()=>{
+      const answered=Object.keys(currentAnswers).length;
+      if(answered<questions.length && !confirm('Some questions are unanswered. Finish anyway?')) return;
+      let correct=0; questions.forEach((q,i)=>{ if(currentAnswers[i]===q.answer) correct++; });
+      const score=Math.round((correct/questions.length)*100);
+      const entry={date:new Date().toLocaleDateString(),label:currentSection.title,
+        mode:(currentMode==='study'?'Study':'Exam'),section:currentSection.title,
+        score,notes:`Answered ${answered}/${questions.length}`};
+      showLoader(true);
+      setTimeout(()=>{
+        const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+        all.push(entry); localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
+        showLoader(false);
+        alert(`Test completed! Score: ${score}%`);
+        window.location.href='index.html';
+      },400);
     };
 
     saveBtn.onclick=()=>{
@@ -208,13 +227,13 @@
     };
     loadBtn.onclick=()=>{
       const saved=JSON.parse(localStorage.getItem('ccna_progress')||'null');
-      if(!saved) return alert('No saved progress found.');
-      currentSection=saved.currentSection;
-      currentMode=saved.currentMode;
-      questions=saved.questions;
-      currentAnswers=saved.currentAnswers;
-      showQuestions();
-      Object.entries(currentAnswers).forEach(([i,choice])=>handleAnswer(parseInt(i),choice,questions[i].answer));
+      if(!saved){alert('No saved progress found.');return;}
+      currentSection=saved.currentSection; currentMode=saved.currentMode;
+      questions=saved.questions; currentAnswers=saved.currentAnswers||{};
+      renderQuestions();
+      Object.entries(currentAnswers).forEach(([i,choice])=>{
+        if(questions[i]) handleAnswer(parseInt(i),choice,questions[i].answer);
+      });
     };
   </script>
 </body>
