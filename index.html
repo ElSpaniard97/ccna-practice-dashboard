@@ -92,26 +92,12 @@
       color: #e5e7eb;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       padding: 0 20px;
     }
-    .header .right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .btn {
-      background: #fff;
-      border: 1px solid #ddd;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .btn.primary {
-      background: var(--accent);
-      border: none;
-      color: white;
+    .header h2 {
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
     }
 
     /* Main */
@@ -209,11 +195,6 @@
 
     <header class="header">
       <h2>Dashboard</h2>
-      <div class="right">
-        <button class="btn">Help</button>
-        <button class="btn">Settings</button>
-        <button class="btn">Account</button>
-      </div>
     </header>
 
     <main class="main">
