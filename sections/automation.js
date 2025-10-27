@@ -1,2 +1,36 @@
-// Placeholder for automation.js
-export const DATA = [];
+export const AUTOMATION = {
+  id: 'auto',
+  title: 'Automation and Programmability',
+  items: [
+    { q:'What is the purpose of network automation?', options:['Reduce manual configuration','Increase downtime','Replace routing','Disable redundancy'], answer:0, explanation:'Automation minimizes human error and speeds deployment.' },
+    { q:'Which protocol uses YANG data models?', options:['NETCONF','SNMP','SSH','NTP'], answer:0, explanation:'NETCONF exchanges structured data defined by YANG.' },
+    { q:'What format is commonly used for REST APIs?', options:['XML','JSON','CSV','YAML'], answer:1, explanation:'REST APIs often use JSON payloads.' },
+    { q:'Purpose of an API?', options:['Interface for software communication','Replace GUI','Encrypt traffic','Test routing'], answer:0, explanation:'APIs allow software to interact programmatically.' },
+    { q:'HTTP methods used in REST?', options:['GET, POST, PUT, DELETE','RUN, PUSH, STOP','CONNECT, LIST, UPDATE','FETCH, SEND, REMOVE'], answer:0, explanation:'These methods correspond to CRUD operations.' },
+    { q:'RESTCONF uses which protocols?', options:['HTTP and JSON','SSH and SCP','FTP and SNMP','HTTPS and XML only'], answer:0, explanation:'RESTCONF relies on HTTP(S) with XML or JSON.' },
+    { q:'Which Python library interacts with REST APIs?', options:['requests','csv','os','json'], answer:0, explanation:'`requests` handles RESTful HTTP communication.' },
+    { q:'NETCONF default transport?', options:['SSH','HTTP','TCP','TLS'], answer:0, explanation:'NETCONF runs over SSH by default.' },
+    { q:'Which SDN layer defines business policies?', options:['Application','Control','Infrastructure','Physical'], answer:0, explanation:'Application layer expresses intent in SDN architecture.' },
+    { q:'Which SDN component manages devices centrally?', options:['Controller','Switch','Router','Agent'], answer:0, explanation:'Controller provides central management and automation.' },
+    { q:'Cisco DNA Center is an example of...', options:['SDN Controller','Firewall','Load Balancer','Wireless AP'], answer:0, explanation:'DNA Center automates and manages network infrastructure.' },
+    { q:'Ansible playbooks are written in...', options:['YAML','JSON','Python','XML'], answer:0, explanation:'Ansible uses YAML for declarative configuration.' },
+    { q:'Python script file extension?', options:['.js','.py','.txt','.cfg'], answer:1, explanation:'Python scripts end with `.py`.' },
+    { q:'Command to run Python script?', options:['python script.py','run script.py','exec script','py execute'], answer:0, explanation:'Use the python interpreter to run scripts.' },
+    { q:'Purpose of JSON?', options:['Store structured data','Encrypt files','Replace XML','Create VLANs'], answer:0, explanation:'JSON is a lightweight data format for API exchange.' },
+    { q:'Which protocol allows configuration retrieval and modification?', options:['NETCONF','SMTP','ICMP','DNS'], answer:0, explanation:'NETCONF allows reading and editing configurations via YANG.' },
+    { q:'Which of the following describes SDN?', options:['Control plane centralized','All manual CLI','No automation','Peer-to-peer routing only'], answer:0, explanation:'SDN centralizes control for programmability.' },
+    { q:'Python data type for key:value pairs?', options:['Dictionary','List','Tuple','Set'], answer:0, explanation:'Dicts store key-value pairs in Python.' },
+    { q:'Which tool is Cisco’s network automation platform?', options:['DNA Center','Wireshark','Packet Tracer','SolarWinds'], answer:0, explanation:'DNA Center automates configurations and assurance.' },
+    { q:'REST API base URL example?', options:['https://device/api/v1/','telnet://router/','ftp://switch/config','ssh://device/cli'], answer:0, explanation:'APIs use HTTPS with versioned endpoints.' },
+    { q:'YANG defines...', options:['Data models','Encryption','Routing algorithms','QoS policies'], answer:0, explanation:'YANG models define network data structures.' },
+    { q:'Tool to convert JSON to Python objects?', options:['json.loads()','requests.get()','yaml.parse()','csv.reader()'], answer:0, explanation:'`json.loads()` parses JSON strings.' },
+    { q:'Which SDN API model is most common?', options:['REST','SOAP','FTP','SSH'], answer:0, explanation:'REST is most widely adopted for modern APIs.' },
+    { q:'Purpose of model-driven programmability?', options:['Use defined schemas for consistency','Random data exchange','Manual configuration only','Central log storage'], answer:0, explanation:'Ensures consistent data across platforms.' },
+    { q:'NETCONF messages formatted in...', options:['XML','JSON','CSV','YAML'], answer:0, explanation:'NETCONF primarily uses XML for structure.' },
+    { q:'Python command to print text?', options:['print("Hello")','echo Hello','say Hello','out("Hello")'], answer:0, explanation:'`print()` displays output in Python.' },
+    { q:'SDN separates which planes?', options:['Control and Data','Physical and Logical','Access and Core','Routing and Switching'], answer:0, explanation:'Control plane is centralized; data plane remains distributed.' },
+    { q:'REST API authentication method?', options:['Token or API key','Username only','Unencrypted access','MAC address'], answer:0, explanation:'APIs use token or OAuth for authentication.' },
+    { q:'Purpose of automation scripts?', options:['Reduce repetitive CLI tasks','Replace firewalls','Speed up ping','Check VLANs manually'], answer:0, explanation:'Automation reduces manual repetition and errors.' },
+    { q:'Which Python library parses JSON?', options:['json','os','re','csv'], answer:0, explanation:'The built-in `json` library loads and dumps JSON.' }
+  ]
+};
