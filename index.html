@@ -14,9 +14,6 @@
       --text:#111827;
       --muted:#6b7280;
       --accent:#2563eb;
-      --ok:#10b981;
-      --warn:#f59e0b;
-      --bad:#ef4444;
       --shadow:0 2px 8px rgba(0,0,0,0.05);
     }
 
@@ -182,11 +179,12 @@
 <body>
   <div class="app">
     <aside class="sidebar">
+      <div class="brand">CCNA Dashboard</div>
       <div class="nav">
-  <a href="index.html" class="active">Dashboard</a>
-  <a href="questions.html">Practice Test</a>
-  <a href="flashcards.html">Flashcards</a>
-</div>
+        <a href="index.html" class="active">Dashboard</a>
+        <a href="questions.html">Practice Test</a>
+        <a href="flashcards.html">Flashcards</a>
+      </div>
       <div class="bottom">
         <button id="syncQuestions">Sync from Questions</button>
         <button id="clearAll">Clear All Data</button>
@@ -246,16 +244,13 @@
     const kpiWeak = document.getElementById('kpiWeak');
     const recList = document.getElementById('recList');
     const tbody = document.getElementById('resultsBody');
-
     const ctxTrend = document.getElementById('trendChart');
     const ctxSection = document.getElementById('sectionChart');
-
     let trendChart = null;
     let sectionChart = null;
 
     function refreshDashboard() {
       if (!data.length) return;
-
       const testsTaken = data.length;
       const avgScore = Math.round(data.reduce((a,b)=>a+b.score,0)/testsTaken);
       const sectionScores = {};
@@ -286,43 +281,37 @@
       drawCharts(data, sectionAverages);
     }
 
+    // Show only sections below 80%
     function updateRecommendations(sectionAverages) {
-  // Filter for sections below 80%
-  const weakAreas = sectionAverages.filter(s => s.avg < 80);
-
-  if (!weakAreas.length) {
-    recList.innerHTML = `
-      <div class="rec">
-        <h4>All Sections Above 80%</h4>
-        <p>You're doing great! Continue reviewing past weak areas and stay consistent.</p>
-      </div>`;
-    return;
-  }
-
-  // Sort weakest to strongest (below 80 only)
-  const sorted = weakAreas.sort((a, b) => a.avg - b.avg);
-
-  recList.innerHTML = sorted.map(s => `
-    <div class="rec">
-      <h4>${s.section}</h4>
-      <p>Average: ${Math.round(s.avg)}%</p>
-      <ul>
-        <li>Review key concepts in ${s.section}</li>
-        <li>Retake this section test to improve accuracy</li>
-        <li>Revisit labs and practice configurations</li>
-      </ul>
-    </div>
-  `).join('');
-}
+      const weakAreas = sectionAverages.filter(s => s.avg < 80);
+      if (!weakAreas.length) {
+        recList.innerHTML = `
+          <div class="rec">
+            <h4>All Sections Above 80%</h4>
+            <p>You're doing great! Continue reviewing past weak areas and stay consistent.</p>
+          </div>`;
+        return;
+      }
+      const sorted = weakAreas.sort((a,b)=>a.avg-b.avg);
+      recList.innerHTML = sorted.map(s=>`
+        <div class="rec">
+          <h4>${s.section}</h4>
+          <p>Average: ${Math.round(s.avg)}%</p>
+          <ul>
+            <li>Review key concepts in ${s.section}</li>
+            <li>Retake this section test to improve accuracy</li>
+            <li>Revisit labs and practice configurations</li>
+          </ul>
+        </div>`).join('');
     }
 
     function drawCharts(allResults, sectionAverages) {
       const scores = allResults.map(r=>r.score);
       const labels = allResults.map(r=>r.label || `Test ${r.date}`);
-
       if (trendChart) trendChart.destroy();
       if (sectionChart) sectionChart.destroy();
 
+      // 📈 Trend Line Chart
       trendChart = new Chart(ctxTrend, {
         type: 'line',
         data: {
@@ -345,21 +334,45 @@
         }
       });
 
+      // 📊 Section Accuracy Chart (color-coded)
       sectionChart = new Chart(ctxSection, {
         type: 'bar',
         data: {
-          labels: sectionAverages.map(s=>s.section),
+          labels: sectionAverages.map(s => s.section),
           datasets: [{
             label: 'Average Accuracy (%)',
-            data: sectionAverages.map(s=>s.avg),
-            backgroundColor: '#60a5fa',
-            borderRadius: 6
+            data: sectionAverages.map(s => s.avg),
+            backgroundColor: sectionAverages.map(s => {
+              if (s.avg < 60) return '#ef4444'; // red
+              if (s.avg < 80) return '#f59e0b'; // orange
+              return '#10b981'; // green
+            }),
+            borderRadius: 6,
+            borderSkipped: false
           }]
         },
         options: {
           responsive: true,
-          scales: { y: { beginAtZero: true, max: 100 } },
-          plugins: { legend: { display: false } }
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { color: '#374151' },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            x: {
+              ticks: { color: '#374151' },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `Accuracy: ${Math.round(ctx.parsed.y)}%`
+              }
+            }
+          }
         }
       });
     }
@@ -370,11 +383,9 @@
         location.reload();
       }
     };
-
     document.getElementById('syncQuestions').onclick = ()=>{
       alert('Sync from Questions will automatically update once integrated.');
     };
-
     refreshDashboard();
   </script>
 </body>
