@@ -15,7 +15,7 @@ Hosted easily on **GitHub Pages**, this project lets you:
 
 Once you enable GitHub Pages, your live dashboard will be accessible at:
 
-[https://elspaniard97.github.io/ccna-practice-dashboard/
+https://elspaniard97.github.io/ccna-practice-dashboard/
 
 yaml
 Copy code
