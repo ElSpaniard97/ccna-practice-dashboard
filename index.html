@@ -1,1 +1,353 @@
-<!-- CCNA Dashboard main HTML (content from previous final version) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CCNA Study Dashboard</title>
+  <style>
+    :root {
+      --sidebar:#1f2937;
+      --sidebar-dark:#111827;
+      --header:#111827;
+      --main-bg:#f5f6fa;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --shadow:0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, system-ui, Segoe UI, Roboto, sans-serif;
+      background: var(--main-bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      grid-template-rows: 56px 1fr;
+      grid-template-areas:
+        "sidebar header"
+        "sidebar main";
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      grid-area: sidebar;
+      background: linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));
+      color: #e5e7eb;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand {
+      padding: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav {
+      flex: 1;
+      padding: 12px;
+    }
+    .nav a {
+      display: block;
+      padding: 10px 14px;
+      border-radius: 6px;
+      color: #d1d5db;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .nav a:hover, .nav a.active {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+    .sidebar .bottom {
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .sidebar .bottom button {
+      width: 100%;
+      margin-top: 6px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #e5e7eb;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .sidebar .bottom button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Header */
+    .header {
+      grid-area: header;
+      background: var(--header);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    .header .right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .btn.primary {
+      background: var(--accent);
+      border: none;
+      color: white;
+    }
+
+    /* Main */
+    .main {
+      grid-area: main;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .kpi .label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+    .kpi .value {
+      font-weight: 700;
+      font-size: 1.6rem;
+      margin-top: 4px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    canvas {
+      width: 100%;
+      height: 300px;
+      background: #fff;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    tr:hover td { background: #f9fafb; }
+
+    .rec-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 12px;
+    }
+    .rec {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+    .rec h4 { margin-bottom: 6px; font-size: 1rem; }
+
+    @media(max-width:900px) {
+      .app { grid-template-columns: 0 1fr }
+      .sidebar { display: none }
+      .row { grid-template-columns: 1fr }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">CCNA Dashboard</div>
+      <div class="nav">
+        <a href="#" class="active">Dashboard</a>
+        <a href="questions.html">Practice Test</a>
+      </div>
+      <div class="bottom">
+        <button id="syncQuestions">Sync from Questions (coming soon)</button>
+        <button id="clearAll">Clear All Data</button>
+      </div>
+    </aside>
+
+    <header class="header">
+      <h2>Dashboard</h2>
+      <div class="right">
+        <button class="btn">Help</button>
+        <button class="btn">Settings</button>
+        <button class="btn">Account</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="cards">
+        <div class="card kpi"><div class="label">Tests Taken</div><div class="value" id="kpiTests">0</div></div>
+        <div class="card kpi"><div class="label">Average Score</div><div class="value" id="kpiAccuracy">0%</div></div>
+        <div class="card kpi"><div class="label">Best Section</div><div class="value" id="kpiBest">—</div></div>
+        <div class="card kpi"><div class="label">Weakest Section</div><div class="value" id="kpiWeak">—</div></div>
+      </section>
+
+      <section class="row">
+        <div class="card">
+          <h3>Score Trend</h3>
+          <canvas id="trendChart"></canvas>
+        </div>
+        <div class="card">
+          <h3>Accuracy by Section</h3>
+          <canvas id="sectionChart"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>Recommended Areas to Study</h3>
+        <div class="rec-list" id="recList"></div>
+      </section>
+
+      <section class="card">
+        <h3>Recent Attempts</h3>
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Label</th><th>Mode</th><th>Section</th><th>Score</th><th>Notes</th></tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Load stored results
+    const STORAGE_KEY = 'ccna_results_v1';
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    const kpiTests = document.getElementById('kpiTests');
+    const kpiAccuracy = document.getElementById('kpiAccuracy');
+    const kpiBest = document.getElementById('kpiBest');
+    const kpiWeak = document.getElementById('kpiWeak');
+    const recList = document.getElementById('recList');
+    const tbody = document.getElementById('resultsBody');
+
+    function refreshDashboard() {
+      if (!data.length) return;
+
+      const testsTaken = data.length;
+      const avgScore = Math.round(data.reduce((a,b)=>a+b.score,0)/testsTaken);
+      const sectionScores = {};
+
+      data.forEach(r=>{
+        if (!sectionScores[r.section]) sectionScores[r.section]=[];
+        sectionScores[r.section].push(r.score);
+      });
+
+      const sectionAverages = Object.entries(sectionScores).map(([sec,arr])=>({
+        section:sec, avg:arr.reduce((a,b)=>a+b,0)/arr.length
+      }));
+
+      const best = sectionAverages.reduce((a,b)=>a.avg>b.avg?a:b);
+      const weak = sectionAverages.reduce((a,b)=>a.avg<b.avg?a:b);
+
+      kpiTests.textContent = testsTaken;
+      kpiAccuracy.textContent = avgScore + '%';
+      kpiBest.textContent = best.section;
+      kpiWeak.textContent = weak.section;
+
+      tbody.innerHTML = data.slice(-10).reverse().map(r=>
+        `<tr><td>${r.date}</td><td>${r.label||'—'}</td><td>${r.mode}</td><td>${r.section}</td><td>${r.score}%</td><td>${r.notes||''}</td></tr>`
+      ).join('');
+
+      updateRecommendations(sectionAverages);
+      drawCharts(data, sectionAverages);
+    }
+
+    function updateRecommendations(sectionAverages) {
+      const sorted = [...sectionAverages].sort((a,b)=>a.avg-b.avg).slice(0,3);
+      recList.innerHTML = sorted.map(s=>`
+        <div class="rec">
+          <h4>${s.section}</h4>
+          <p>Average: ${Math.round(s.avg)}%</p>
+          <ul>
+            <li>Review related commands</li>
+            <li>Retake section practice</li>
+            <li>Focus on weak topics</li>
+          </ul>
+        </div>`).join('');
+    }
+
+    function drawCharts(allResults, sectionAverages) {
+      const ctx1 = document.getElementById('trendChart').getContext('2d');
+      const ctx2 = document.getElementById('sectionChart').getContext('2d');
+
+      // Basic line chart (trend)
+      const scores = allResults.map(r=>r.score);
+      ctx1.clearRect(0,0,ctx1.canvas.width,ctx1.canvas.height);
+      ctx1.beginPath();
+      ctx1.moveTo(0,300 - scores[0]*3);
+      scores.forEach((s,i)=>ctx1.lineTo(i*10,300 - s*3));
+      ctx1.strokeStyle = '#2563eb';
+      ctx1.lineWidth = 2;
+      ctx1.stroke();
+
+      // Bar chart by section
+      ctx2.clearRect(0,0,ctx2.canvas.width,ctx2.canvas.height);
+      const barW = 40, gap = 20;
+      sectionAverages.forEach((s,i)=>{
+        const h = (s.avg/100)*250;
+        ctx2.fillStyle = '#2563eb';
+        ctx2.fillRect(40 + i*(barW+gap), 280-h, barW, h);
+        ctx2.fillStyle = '#000';
+        ctx2.fillText(s.section.slice(0,6), 40 + i*(barW+gap), 295);
+      });
+    }
+
+    document.getElementById('clearAll').onclick = ()=>{
+      if(confirm('Clear all saved test data?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    };
+
+    document.getElementById('syncQuestions').onclick = ()=>{
+      alert('Sync from Questions will automatically update once integrated.');
+    };
+
+    refreshDashboard();
+  </script>
+</body>
+</html>
