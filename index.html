@@ -1,392 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CCNA Study Dashboard</title>
-  <style>
-    :root {
-      --sidebar:#1f2937;
-      --sidebar-dark:#111827;
-      --header:#111827;
-      --main-bg:#f5f6fa;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --accent:#2563eb;
-      --shadow:0 2px 8px rgba(0,0,0,0.05);
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CCNA Study Dashboard</title>
+<style>
+:root {
+  --sidebar:#1f2937;
+  --sidebar-dark:#111827;
+  --header:#111827;
+  --main-bg:#f5f6fa;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --accent:#2563eb;
+  --shadow:0 2px 8px rgba(0,0,0,0.05);
+  --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
+}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: Inter, system-ui, Segoe UI, Roboto, sans-serif;
-      background: var(--main-bg);
-      color: var(--text);
-    }
+/* 🌙 Dark theme variables */
+[data-theme="dark"] {
+  --sidebar:#111827;
+  --sidebar-dark:#0f172a;
+  --header:#0f172a;
+  --main-bg:#0d1117;
+  --card:#1e293b;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --shadow:0 2px 8px rgba(0,0,0,0.3);
+}
 
-    .app {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      grid-template-rows: 56px 1fr;
-      grid-template-areas:
-        "sidebar header"
-        "sidebar main";
-      height: 100vh;
-    }
+*{box-sizing:border-box;margin:0;padding:0;transition:background-color .3s,color .3s;}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;
+  background:var(--main-bg);color:var(--text);
+}
 
-    /* Sidebar */
-    .sidebar {
-      grid-area: sidebar;
-      background: linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));
-      color: #e5e7eb;
-      display: flex;
-      flex-direction: column;
-    }
-    .brand {
-      padding: 16px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    .nav {
-      flex: 1;
-      padding: 12px;
-    }
-    .nav a {
-      display: block;
-      padding: 10px 14px;
-      border-radius: 6px;
-      color: #d1d5db;
-      text-decoration: none;
-      transition: background .2s;
-    }
-    .nav a:hover, .nav a.active {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-    }
-    .sidebar .bottom {
-      padding: 12px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .sidebar .bottom button {
-      width: 100%;
-      margin-top: 6px;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #e5e7eb;
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .sidebar .bottom button:hover {
-      background: rgba(255,255,255,0.2);
-    }
+.app{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  grid-template-rows:56px 1fr;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar main";
+  height:100vh;
+}
 
-    /* Header */
-    .header {
-      grid-area: header;
-      background: var(--header);
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 20px;
-    }
-    .header h2 {
-      font-size: 1.25rem;
-      letter-spacing: 0.5px;
-    }
+/* Sidebar */
+.sidebar{
+  grid-area:sidebar;
+  background:linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));
+  color:#e5e7eb;display:flex;flex-direction:column;
+}
+.brand{padding:16px;font-size:1.1rem;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.1);}
+.nav{flex:1;padding:12px;}
+.nav a{
+  display:block;padding:10px 14px;border-radius:6px;
+  color:#d1d5db;text-decoration:none;transition:background .2s;
+}
+.nav a:hover,.nav a.active{background:rgba(255,255,255,0.1);color:#fff;}
+.sidebar .bottom{
+  padding:12px;border-top:1px solid rgba(255,255,255,0.1);
+}
+.sidebar .bottom button{
+  width:100%;margin-top:6px;background:rgba(255,255,255,0.1);
+  border:none;color:#e5e7eb;padding:8px;border-radius:6px;cursor:pointer;
+}
+.sidebar .bottom button:hover{background:rgba(255,255,255,0.2);}
 
-    /* Main */
-    .main {
-      grid-area: main;
-      padding: 20px;
-      overflow-y: auto;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: var(--card);
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .kpi .label {
-      color: var(--muted);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-    }
-    .kpi .value {
-      font-weight: 700;
-      font-size: 1.6rem;
-      margin-top: 4px;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    canvas {
-      width: 100%;
-      height: 300px;
-      background: #fff;
-      border-radius: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    th {
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-    }
-    tr:hover td { background: #f9fafb; }
+/* Header */
+.header{
+  grid-area:header;
+  background:var(--header);color:#e5e7eb;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+}
+.header h2{font-size:1.25rem;letter-spacing:.5px;}
+.toggle-theme{
+  background:none;border:1px solid rgba(255,255,255,0.3);
+  color:#e5e7eb;padding:6px 12px;border-radius:6px;cursor:pointer;
+}
+.toggle-theme:hover{background:rgba(255,255,255,0.1);}
 
-    .rec-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-      gap: 12px;
-    }
-    .rec {
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 12px;
-      background: #fff;
-    }
-    .rec h4 { margin-bottom: 6px; font-size: 1rem; }
+/* Loading overlay */
+.loader{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.4);display:flex;align-items:center;
+  justify-content:center;z-index:999;backdrop-filter:blur(2px);visibility:hidden;
+}
+.loader.show{visibility:visible;}
+.spinner{
+  width:60px;height:60px;border:6px solid #cbd5e1;
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-    @media(max-width:900px) {
-      .app { grid-template-columns: 0 1fr }
-      .sidebar { display: none }
-      .row { grid-template-columns: 1fr }
-    }
-  </style>
+/* Main */
+.main{grid-area:main;padding:20px;overflow-y:auto;}
+.cards{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;margin-bottom:20px;
+}
+.card{
+  background:var(--card);border-radius:8px;padding:16px;box-shadow:var(--shadow);
+}
+.kpi .label{color:var(--muted);font-size:.8rem;text-transform:uppercase;}
+.kpi .value{font-weight:700;font-size:1.6rem;margin-top:4px;}
+.row{
+  display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:20px;
+}
+canvas{width:100%;height:300px;background:var(--card);border-radius:8px;}
+table{width:100%;border-collapse:collapse;font-size:.9rem;}
+th,td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb;}
+th{color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;}
+tr:hover td{background:rgba(0,0,0,0.03);}
+.rec-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
+.rec{border:1px solid #e5e7eb;border-radius:8px;padding:12px;background:var(--card);}
+.rec h4{margin-bottom:6px;font-size:1rem;}
+
+@media(max-width:900px){
+  .app{grid-template-columns:0 1fr;}
+  .sidebar{display:none;}
+  .row{grid-template-columns:1fr;}
+}
+</style>
 </head>
 
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">CCNA Dashboard</div>
-      <div class="nav">
-        <a href="index.html" class="active">Dashboard</a>
-        <a href="questions.html">Practice Test</a>
-        <a href="flashcards.html">Flashcards</a>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">CCNA Dashboard</div>
+    <div class="nav">
+      <a href="index.html" class="active">Dashboard</a>
+      <a href="questions.html">Practice Test</a>
+      <a href="flashcards.html">Flashcards</a>
+    </div>
+    <div class="bottom">
+      <button id="syncQuestions">Sync from Questions</button>
+      <button id="clearAll">Clear All Data</button>
+    </div>
+  </aside>
+
+  <header class="header">
+    <h2>Dashboard</h2>
+    <button id="themeToggle" class="toggle-theme">🌙</button>
+  </header>
+
+  <main class="main">
+    <section class="cards">
+      <div class="card kpi"><div class="label">Tests Taken</div><div class="value" id="kpiTests">0</div></div>
+      <div class="card kpi"><div class="label">Average Score</div><div class="value" id="kpiAccuracy">0%</div></div>
+      <div class="card kpi"><div class="label">Best Section</div><div class="value" id="kpiBest">—</div></div>
+      <div class="card kpi"><div class="label">Weakest Section</div><div class="value" id="kpiWeak">—</div></div>
+    </section>
+
+    <section class="row">
+      <div class="card">
+        <h3>Score Trend</h3>
+        <canvas id="trendChart"></canvas>
       </div>
-      <div class="bottom">
-        <button id="syncQuestions">Sync from Questions</button>
-        <button id="clearAll">Clear All Data</button>
+      <div class="card">
+        <h3>Accuracy by Section</h3>
+        <canvas id="sectionChart"></canvas>
       </div>
-    </aside>
+    </section>
 
-    <header class="header">
-      <h2>Dashboard</h2>
-    </header>
+    <section class="card">
+      <h3>Recommended Areas to Study</h3>
+      <div class="rec-list" id="recList"></div>
+    </section>
 
-    <main class="main">
-      <section class="cards">
-        <div class="card kpi"><div class="label">Tests Taken</div><div class="value" id="kpiTests">0</div></div>
-        <div class="card kpi"><div class="label">Average Score</div><div class="value" id="kpiAccuracy">0%</div></div>
-        <div class="card kpi"><div class="label">Best Section</div><div class="value" id="kpiBest">—</div></div>
-        <div class="card kpi"><div class="label">Weakest Section</div><div class="value" id="kpiWeak">—</div></div>
-      </section>
+    <section class="card">
+      <h3>Recent Attempts</h3>
+      <table>
+        <thead><tr><th>Date</th><th>Label</th><th>Mode</th><th>Section</th><th>Score</th><th>Notes</th></tr></thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
 
-      <section class="row">
-        <div class="card">
-          <h3>Score Trend</h3>
-          <canvas id="trendChart"></canvas>
-        </div>
-        <div class="card">
-          <h3>Accuracy by Section</h3>
-          <canvas id="sectionChart"></canvas>
-        </div>
-      </section>
+<!-- Loader -->
+<div class="loader" id="loader"><div class="spinner"></div></div>
 
-      <section class="card">
-        <h3>Recommended Areas to Study</h3>
-        <div class="rec-list" id="recList"></div>
-      </section>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-      <section class="card">
-        <h3>Recent Attempts</h3>
-        <table>
-          <thead>
-            <tr><th>Date</th><th>Label</th><th>Mode</th><th>Section</th><th>Score</th><th>Notes</th></tr>
-          </thead>
-          <tbody id="resultsBody"></tbody>
-        </table>
-      </section>
-    </main>
-  </div>
+<script>
+const STORAGE_KEY='ccna_results_v1';
+const data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+const loader=document.getElementById('loader');
+const toggle=document.getElementById('themeToggle');
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+/* ---------- THEME TOGGLE ---------- */
+const savedTheme=localStorage.getItem('theme')||'light';
+if(savedTheme==='dark'){document.documentElement.setAttribute('data-theme','dark');toggle.textContent='☀️';}
+toggle.addEventListener('click',()=>{
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  if(isDark){
+    document.documentElement.removeAttribute('data-theme');
+    toggle.textContent='🌙';
+    localStorage.setItem('theme','light');
+  }else{
+    document.documentElement.setAttribute('data-theme','dark');
+    toggle.textContent='☀️';
+    localStorage.setItem('theme','dark');
+  }
+});
 
-  <script>
-    const STORAGE_KEY = 'ccna_results_v1';
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+/* ---------- DASHBOARD LOGIC ---------- */
+const kpiTests=document.getElementById('kpiTests');
+const kpiAccuracy=document.getElementById('kpiAccuracy');
+const kpiBest=document.getElementById('kpiBest');
+const kpiWeak=document.getElementById('kpiWeak');
+const recList=document.getElementById('recList');
+const tbody=document.getElementById('resultsBody');
+const ctxTrend=document.getElementById('trendChart');
+const ctxSection=document.getElementById('sectionChart');
+let trendChart=null;let sectionChart=null;
 
-    const kpiTests = document.getElementById('kpiTests');
-    const kpiAccuracy = document.getElementById('kpiAccuracy');
-    const kpiBest = document.getElementById('kpiBest');
-    const kpiWeak = document.getElementById('kpiWeak');
-    const recList = document.getElementById('recList');
-    const tbody = document.getElementById('resultsBody');
-    const ctxTrend = document.getElementById('trendChart');
-    const ctxSection = document.getElementById('sectionChart');
-    let trendChart = null;
-    let sectionChart = null;
+function showLoader(on){loader.classList.toggle('show',on);}
 
-    function refreshDashboard() {
-      if (!data.length) return;
-      const testsTaken = data.length;
-      const avgScore = Math.round(data.reduce((a,b)=>a+b.score,0)/testsTaken);
-      const sectionScores = {};
+function refreshDashboard(){
+  showLoader(true);
+  setTimeout(()=>{
+    if(!data.length){showLoader(false);return;}
+    const testsTaken=data.length;
+    const avgScore=Math.round(data.reduce((a,b)=>a+b.score,0)/testsTaken);
+    const sectionScores={};
+    data.forEach(r=>{
+      if(!sectionScores[r.section])sectionScores[r.section]=[];
+      sectionScores[r.section].push(r.score);
+    });
+    const sectionAverages=Object.entries(sectionScores).map(([sec,arr])=>({
+      section:sec,avg:arr.reduce((a,b)=>a+b,0)/arr.length
+    }));
+    const best=sectionAverages.reduce((a,b)=>a.avg>b.avg?a:b);
+    const weak=sectionAverages.reduce((a,b)=>a.avg<b.avg?a:b);
+    kpiTests.textContent=testsTaken;
+    kpiAccuracy.textContent=avgScore+'%';
+    kpiBest.textContent=best.section;
+    kpiWeak.textContent=weak.section;
+    tbody.innerHTML=data.slice(-10).reverse().map(r=>
+      `<tr><td>${r.date}</td><td>${r.label||'—'}</td><td>${r.mode}</td>
+      <td>${r.section}</td><td>${r.score}%</td><td>${r.notes||''}</td></tr>`).join('');
+    updateRecommendations(sectionAverages);
+    drawCharts(data,sectionAverages);
+    showLoader(false);
+  },600);
+}
 
-      data.forEach(r=>{
-        if (!sectionScores[r.section]) sectionScores[r.section]=[];
-        sectionScores[r.section].push(r.score);
-      });
+/* ---------- Recommendations (below 80%) ---------- */
+function updateRecommendations(sectionAverages){
+  const weakAreas=sectionAverages.filter(s=>s.avg<80);
+  if(!weakAreas.length){
+    recList.innerHTML=`<div class="rec"><h4>All Sections Above 80%</h4>
+    <p>You're doing great! Continue reviewing past weak areas and stay consistent.</p></div>`;
+    return;
+  }
+  const sorted=weakAreas.sort((a,b)=>a.avg-b.avg);
+  recList.innerHTML=sorted.map(s=>`
+    <div class="rec">
+      <h4>${s.section}</h4>
+      <p>Average: ${Math.round(s.avg)}%</p>
+      <ul>
+        <li>Review key concepts in ${s.section}</li>
+        <li>Retake this section test to improve accuracy</li>
+        <li>Revisit labs and practice configurations</li>
+      </ul>
+    </div>`).join('');
+}
 
-      const sectionAverages = Object.entries(sectionScores).map(([sec,arr])=>({
-        section:sec,
-        avg:arr.reduce((a,b)=>a+b,0)/arr.length
-      }));
+/* ---------- Charts ---------- */
+function drawCharts(allResults,sectionAverages){
+  const scores=allResults.map(r=>r.score);
+  const labels=allResults.map(r=>r.label||`Test ${r.date}`);
+  if(trendChart)trendChart.destroy();
+  if(sectionChart)sectionChart.destroy();
 
-      const best = sectionAverages.reduce((a,b)=>a.avg>b.avg?a:b);
-      const weak = sectionAverages.reduce((a,b)=>a.avg<b.avg?a:b);
+  // Trend chart
+  trendChart=new Chart(ctxTrend,{
+    type:'line',
+    data:{labels,
+      datasets:[{label:'Score (%)',data:scores,borderColor:'#2563eb',
+      backgroundColor:'rgba(37,99,235,0.15)',fill:true,tension:.3,borderWidth:2,pointRadius:4}]
+    },
+    options:{responsive:true,scales:{y:{beginAtZero:true,max:100}},plugins:{legend:{display:false}}}
+  });
 
-      kpiTests.textContent = testsTaken;
-      kpiAccuracy.textContent = avgScore + '%';
-      kpiBest.textContent = best.section;
-      kpiWeak.textContent = weak.section;
-
-      tbody.innerHTML = data.slice(-10).reverse().map(r=>
-        `<tr><td>${r.date}</td><td>${r.label||'—'}</td><td>${r.mode}</td><td>${r.section}</td><td>${r.score}%</td><td>${r.notes||''}</td></tr>`
-      ).join('');
-
-      updateRecommendations(sectionAverages);
-      drawCharts(data, sectionAverages);
-    }
-
-    // Show only sections below 80%
-    function updateRecommendations(sectionAverages) {
-      const weakAreas = sectionAverages.filter(s => s.avg < 80);
-      if (!weakAreas.length) {
-        recList.innerHTML = `
-          <div class="rec">
-            <h4>All Sections Above 80%</h4>
-            <p>You're doing great! Continue reviewing past weak areas and stay consistent.</p>
-          </div>`;
-        return;
+  // Section chart color-coded
+  sectionChart=new Chart(ctxSection,{
+    type:'bar',
+    data:{
+      labels:sectionAverages.map(s=>s.section),
+      datasets:[{
+        label:'Average Accuracy (%)',
+        data:sectionAverages.map(s=>s.avg),
+        backgroundColor:sectionAverages.map(s=>{
+          if(s.avg<60)return'#ef4444';
+          if(s.avg<80)return'#f59e0b';
+          return'#10b981';
+        }),
+        borderRadius:6,borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,
+      scales:{
+        y:{beginAtZero:true,max:100,ticks:{color:'#374151'},grid:{color:'rgba(0,0,0,0.05)'}},
+        x:{ticks:{color:'#374151'},grid:{display:false}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>`Accuracy: ${Math.round(ctx.parsed.y)}%`}}
       }
-      const sorted = weakAreas.sort((a,b)=>a.avg-b.avg);
-      recList.innerHTML = sorted.map(s=>`
-        <div class="rec">
-          <h4>${s.section}</h4>
-          <p>Average: ${Math.round(s.avg)}%</p>
-          <ul>
-            <li>Review key concepts in ${s.section}</li>
-            <li>Retake this section test to improve accuracy</li>
-            <li>Revisit labs and practice configurations</li>
-          </ul>
-        </div>`).join('');
     }
+  });
+}
 
-    function drawCharts(allResults, sectionAverages) {
-      const scores = allResults.map(r=>r.score);
-      const labels = allResults.map(r=>r.label || `Test ${r.date}`);
-      if (trendChart) trendChart.destroy();
-      if (sectionChart) sectionChart.destroy();
+/* ---------- Buttons ---------- */
+document.getElementById('clearAll').onclick=()=>{
+  if(confirm('Clear all saved test data?')){
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+};
+document.getElementById('syncQuestions').onclick=()=>{
+  showLoader(true);
+  setTimeout(()=>{
+    alert('✅ Data synced from Questions (simulated)');
+    showLoader(false);
+  },1000);
+};
 
-      // 📈 Trend Line Chart
-      trendChart = new Chart(ctxTrend, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Score (%)',
-            data: scores,
-            borderColor: '#2563eb',
-            backgroundColor: 'rgba(37,99,235,0.15)',
-            fill: true,
-            tension: 0.3,
-            borderWidth: 2,
-            pointRadius: 4,
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: { y: { beginAtZero: true, max: 100 } },
-          plugins: { legend: { display: false } }
-        }
-      });
-
-      // 📊 Section Accuracy Chart (color-coded)
-      sectionChart = new Chart(ctxSection, {
-        type: 'bar',
-        data: {
-          labels: sectionAverages.map(s => s.section),
-          datasets: [{
-            label: 'Average Accuracy (%)',
-            data: sectionAverages.map(s => s.avg),
-            backgroundColor: sectionAverages.map(s => {
-              if (s.avg < 60) return '#ef4444'; // red
-              if (s.avg < 80) return '#f59e0b'; // orange
-              return '#10b981'; // green
-            }),
-            borderRadius: 6,
-            borderSkipped: false
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: { color: '#374151' },
-              grid: { color: 'rgba(0,0,0,0.05)' }
-            },
-            x: {
-              ticks: { color: '#374151' },
-              grid: { display: false }
-            }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: ctx => `Accuracy: ${Math.round(ctx.parsed.y)}%`
-              }
-            }
-          }
-        }
-      });
-    }
-
-    document.getElementById('clearAll').onclick = ()=>{
-      if(confirm('Clear all saved test data?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-    };
-    document.getElementById('syncQuestions').onclick = ()=>{
-      alert('Sync from Questions will automatically update once integrated.');
-    };
-    refreshDashboard();
-  </script>
+refreshDashboard();
+</script>
 </body>
 </html>
