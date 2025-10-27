@@ -1,4 +1,4 @@
-// CCNA question data imports (final version)// ============================================================================
+// ============================================================================
 // CCNA QUESTIONS DATA INDEX
 // Imports all modular section files and exports them as a single array
 // ============================================================================
