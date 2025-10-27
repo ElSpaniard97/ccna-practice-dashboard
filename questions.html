@@ -1,1 +1,220 @@
-<!-- Practice Test HTML (content from previous final version) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CCNA Practice Test</title>
+  <style>
+    :root {
+      --sidebar:#1f2937;
+      --sidebar-dark:#111827;
+      --header:#111827;
+      --main-bg:#f5f6fa;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --ok:#10b981;
+      --bad:#ef4444;
+      --shadow:0 2px 8px rgba(0,0,0,0.05);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,sans-serif;background:var(--main-bg);color:var(--text);}
+    .app{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;grid-template-areas:"sidebar header" "sidebar main";height:100vh;}
+
+    /* Sidebar */
+    .sidebar{grid-area:sidebar;background:linear-gradient(180deg,var(--sidebar),var(--sidebar-dark));color:#e5e7eb;display:flex;flex-direction:column;}
+    .brand{padding:16px;font-size:1.1rem;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.1);}
+    .nav{flex:1;padding:12px;}
+    .nav a{display:block;padding:10px 14px;border-radius:6px;color:#d1d5db;text-decoration:none;transition:background .2s;}
+    .nav a:hover,.nav a.active{background:rgba(255,255,255,0.1);color:#fff;}
+
+    /* Header */
+    .header{grid-area:header;background:var(--header);color:#e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+    .header .right{display:flex;gap:10px;align-items:center;}
+    .btn{background:#fff;border:1px solid #ddd;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.9rem;}
+    .btn.primary{background:var(--accent);border:none;color:white;}
+
+    /* Main content */
+    .main{grid-area:main;padding:20px;overflow-y:auto;}
+    .card{background:var(--card);border-radius:8px;padding:16px;box-shadow:var(--shadow);margin-bottom:20px;}
+    h3{margin-bottom:10px;}
+    select,input{padding:6px 10px;margin:5px 0;border:1px solid #ddd;border-radius:6px;}
+    label{font-size:0.9rem;margin-right:8px;}
+    .question{margin-bottom:15px;}
+    .options label{display:block;padding:6px 10px;border:1px solid #ddd;border-radius:6px;margin:4px 0;cursor:pointer;}
+    .options label.correct{background:#d1fae5;border-color:#10b981;}
+    .options label.wrong{background:#fee2e2;border-color:#ef4444;}
+    .hidden{display:none;}
+    #status{margin:10px 0;color:var(--muted);}
+    @media(max-width:900px){.app{grid-template-columns:0 1fr}.sidebar{display:none}}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">CCNA Practice</div>
+      <div class="nav">
+        <a href="index.html">Dashboard</a>
+        <a href="#" class="active">Practice Test</a>
+      </div>
+    </aside>
+
+    <header class="header">
+      <h2>Practice Test</h2>
+      <div class="right">
+        <button id="saveProgress" class="btn">Save Progress</button>
+        <button id="loadProgress" class="btn">Load Progress</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="card">
+        <h3>Setup Test</h3>
+        <label>Section:</label>
+        <select id="sectionSelect"></select>
+        <label>Mode:</label>
+        <select id="modeSelect">
+          <option value="study">Study Mode</option>
+          <option value="exam">Exam Mode</option>
+        </select>
+        <label>Number of Questions:</label>
+        <input type="number" id="questionCount" value="30" min="1" max="30">
+        <button id="startBtn" class="btn primary">Start Test</button>
+      </div>
+
+      <div id="quizArea" class="card hidden">
+        <div id="status"></div>
+        <div id="questionContainer"></div>
+        <button id="finishBtn" class="btn primary hidden">Finish & Save Result</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Load modular question data -->
+  <script type="module">
+    import { QUESTIONS_SECTIONS } from './questions-data.js';
+    const STORAGE_KEY = 'ccna_results_v1';
+    const sectionSelect = document.getElementById('sectionSelect');
+    const modeSelect = document.getElementById('modeSelect');
+    const countInput = document.getElementById('questionCount');
+    const startBtn = document.getElementById('startBtn');
+    const quizArea = document.getElementById('quizArea');
+    const questionContainer = document.getElementById('questionContainer');
+    const finishBtn = document.getElementById('finishBtn');
+    const statusDiv = document.getElementById('status');
+    const saveBtn = document.getElementById('saveProgress');
+    const loadBtn = document.getElementById('loadProgress');
+
+    let currentSection = null;
+    let currentMode = 'study';
+    let questions = [];
+    let currentAnswers = {};
+
+    // Populate section dropdown
+    QUESTIONS_SECTIONS.forEach(sec => {
+      const opt = document.createElement('option');
+      opt.value = sec.id;
+      opt.textContent = sec.title;
+      sectionSelect.appendChild(opt);
+    });
+
+    // Start test
+    startBtn.onclick = () => {
+      const secId = sectionSelect.value;
+      const selected = QUESTIONS_SECTIONS.find(s=>s.id===secId);
+      if (!selected) return alert('Please select a section.');
+      currentSection = selected;
+      currentMode = modeSelect.value;
+      const count = Math.min(parseInt(countInput.value)||30, selected.items.length);
+      questions = [...selected.items].sort(()=>0.5-Math.random()).slice(0,count);
+      currentAnswers = {};
+      showQuestions();
+    };
+
+    function showQuestions(){
+      quizArea.classList.remove('hidden');
+      finishBtn.classList.remove('hidden');
+      questionContainer.innerHTML = '';
+      questions.forEach((q,idx)=>{
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.innerHTML = `<h4>Q${idx+1}. ${q.q}</h4>`;
+        const opts = document.createElement('div');
+        opts.className = 'options';
+        q.options.forEach((opt,i)=>{
+          const id = `q${idx}_opt${i}`;
+          const label = document.createElement('label');
+          label.setAttribute('for',id);
+          label.textContent = opt;
+          const input = document.createElement('input');
+          input.type='radio';input.name=`q${idx}`;input.value=i;input.id=id;
+          input.onchange=()=>handleAnswer(idx,i,q.answer);
+          label.prepend(input);
+          opts.appendChild(label);
+        });
+        div.appendChild(opts);
+        questionContainer.appendChild(div);
+      });
+      updateStatus();
+    }
+
+    function handleAnswer(qIndex,choice,correct){
+      currentAnswers[qIndex]=choice;
+      if(currentMode==='study'){
+        const qDiv = questionContainer.children[qIndex];
+        qDiv.querySelectorAll('label').forEach((lbl,i)=>{
+          lbl.classList.remove('correct','wrong');
+          if(i===correct) lbl.classList.add('correct');
+          else if(i===choice) lbl.classList.add('wrong');
+        });
+      }
+      updateStatus();
+    }
+
+    function updateStatus(){
+      const answered = Object.keys(currentAnswers).length;
+      statusDiv.textContent = `Answered ${answered}/${questions.length}`;
+    }
+
+    finishBtn.onclick = ()=>{
+      const answered = Object.keys(currentAnswers).length;
+      if(answered < questions.length && !confirm('Some questions are unanswered. Finish anyway?')) return;
+      let correct = 0;
+      questions.forEach((q,i)=>{ if(currentAnswers[i]===q.answer) correct++; });
+      const score = Math.round((correct/questions.length)*100);
+      const date = new Date().toLocaleDateString();
+      const modeLabel = currentMode==='study'?'Study':'Exam';
+      const entry = {
+        date,
+        label: `${currentSection.title}`,
+        mode: modeLabel,
+        section: currentSection.title,
+        score,
+        notes: `Answered ${answered}/${questions.length}`
+      };
+      const all = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+      all.push(entry);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
+      alert(`Test completed! Score: ${score}%`);
+      window.location.href='index.html';
+    };
+
+    saveBtn.onclick=()=>{
+      localStorage.setItem('ccna_progress',JSON.stringify({currentSection,currentMode,questions,currentAnswers}));
+      alert('Progress saved.');
+    };
+    loadBtn.onclick=()=>{
+      const saved=JSON.parse(localStorage.getItem('ccna_progress')||'null');
+      if(!saved) return alert('No saved progress found.');
+      currentSection=saved.currentSection;
+      currentMode=saved.currentMode;
+      questions=saved.questions;
+      currentAnswers=saved.currentAnswers;
+      showQuestions();
+      Object.entries(currentAnswers).forEach(([i,choice])=>handleAnswer(parseInt(i),choice,questions[i].answer));
+    };
+  </script>
+</body>
+</html>
