@@ -1,2 +1,36 @@
-// Placeholder for fundamentals.js
-export const DATA = [];
+export const FUNDAMENTALS = {
+  id: 'fund',
+  title: 'Network Fundamentals',
+  items: [
+    { q: 'Which layer of the OSI model is responsible for logical addressing?', options:['Data Link','Network','Transport','Session'], answer:1, explanation:'Layer 3 (Network) provides logical addressing using IP.' },
+    { q: 'What device operates at Layer 2 of the OSI model?', options:['Hub','Switch','Router','Firewall'], answer:1, explanation:'Switches make forwarding decisions using MAC addresses.' },
+    { q: 'What protocol resolves IP addresses to MAC addresses?', options:['ARP','DNS','DHCP','ICMP'], answer:0, explanation:'Address Resolution Protocol maps IP → MAC.' },
+    { q: 'Which of the following is a private IPv4 address?', options:['8.8.8.8','10.10.10.10','11.11.11.11','172.35.0.1'], answer:1, explanation:'10.0.0.0/8 is a private IP block.' },
+    { q: 'What is the purpose of a router?', options:['Connects devices in a LAN','Routes traffic between networks','Repeats wireless signals','Provides power to devices'], answer:1, explanation:'Routers forward packets between networks based on IP.' },
+    { q: 'Default administrative distance of a static route?', options:['0','1','90','110'], answer:1, explanation:'Static routes have an AD of 1.' },
+    { q: 'Which device reduces collision domains?', options:['Hub','Switch','Repeater','Bridge'], answer:1, explanation:'Switches segment networks into separate collision domains.' },
+    { q: 'Default mask for 192.168.1.0?', options:['255.0.0.0','255.255.0.0','255.255.255.0','255.255.255.255'], answer:2, explanation:'Class C default subnet mask is /24.' },
+    { q: 'How many usable host IPs in a /27 network?', options:['30','32','28','62'], answer:0, explanation:'2⁵ = 32 − 2 reserved = 30 usable hosts.' },
+    { q: 'Command to show all IP interfaces?', options:['show ip interface brief','show interfaces','show vlan','show mac address-table'], answer:0, explanation:'`show ip interface brief` gives IPs and up/down status.' },
+    { q: 'Which layer uses frames?', options:['Network','Data Link','Transport','Physical'], answer:1, explanation:'Layer 2 encapsulates data into frames.' },
+    { q: 'Binary for decimal 200?', options:['11001000','11100100','11001100','11010000'], answer:0, explanation:'Decimal 200 = binary 11001000.' },
+    { q: 'IPv6 link-local address prefix?', options:['FE80::/10','FF00::/8','2001::/16','::1/128'], answer:0, explanation:'Link-local uses FE80::/10.' },
+    { q: 'Command to save configuration permanently?', options:['copy run start','write erase','show config','erase startup-config'], answer:0, explanation:'`copy running-config startup-config` saves to NVRAM.' },
+    { q: 'Which protocol provides reliable communication?', options:['UDP','TCP','ICMP','RIP'], answer:1, explanation:'TCP offers reliability and sequencing.' },
+    { q: 'Which IP class supports 16 million hosts?', options:['A','B','C','D'], answer:0, explanation:'Class A supports large networks.' },
+    { q: 'Function of ICMP?', options:['Error reporting','IP addressing','Transport encryption','Routing'], answer:0, explanation:'ICMP handles control/error messages (e.g., ping).' },
+    { q: 'Which layer converts bits to signals?', options:['Data Link','Transport','Network','Physical'], answer:3, explanation:'Physical layer handles transmission over media.' },
+    { q: 'Purpose of DNS?', options:['Assigns IPs','Resolves names to IPs','Encrypts traffic','Routes data'], answer:1, explanation:'DNS maps domain names to IP addresses.' },
+    { q: 'How many bits are in an IPv4 address?', options:['16','32','64','128'], answer:1, explanation:'IPv4 uses 32-bit addressing.' },
+    { q: 'How many layers in the OSI model?', options:['5','6','7','8'], answer:2, explanation:'The OSI model has 7 layers.' },
+    { q: 'What is a MAC address?', options:['Network layer address','Physical hardware address','Software identifier','Subnet mask'], answer:1, explanation:'MAC identifies network interfaces uniquely.' },
+    { q: 'Purpose of a switch?', options:['Forward traffic using MAC','Assign IPs','Route packets','Detect viruses'], answer:0, explanation:'Switches forward based on MAC addresses.' },
+    { q: 'Loopback address in IPv4?', options:['127.0.0.1','255.255.255.255','0.0.0.0','169.254.0.1'], answer:0, explanation:'Loopback for testing local stack.' },
+    { q: 'Cable type for router-to-switch?', options:['Straight-through','Crossover','Console','Fiber'], answer:0, explanation:'Straight-through used for different device types.' },
+    { q: 'Purpose of subnetting?', options:['Reduce broadcasts','Combine networks','Disable DHCP','Add VLANs'], answer:0, explanation:'Subnetting divides networks to limit broadcast domains.' },
+    { q: 'Which command shows the routing table?', options:['show ip route','show routes','show ip config','show version'], answer:0, explanation:'Displays all routes known to the router.' },
+    { q: 'Layer responsible for encryption?', options:['Presentation','Transport','Session','Network'], answer:0, explanation:'Presentation layer handles encryption and formatting.' },
+    { q: 'TCP port for HTTPS?', options:['80','21','443','23'], answer:2, explanation:'HTTPS runs on TCP 443.' },
+    { q: 'OSI layer for end-to-end delivery?', options:['Network','Transport','Data Link','Physical'], answer:1, explanation:'Transport layer provides end-to-end connections.' }
+  ]
+};
