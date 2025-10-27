@@ -1,2 +1,36 @@
-// Placeholder for ip-services.js
-export const DATA = [];
+export const IP_SERVICES = {
+  id: 'ipserv',
+  title: 'IP Services',
+  items: [
+    { q:'Purpose of DHCP?', options:['Assign IPs dynamically','Resolve DNS names','Encrypt data','Route packets'], answer:0, explanation:'DHCP provides IP addressing automatically.' },
+    { q:'DHCP uses which transport?', options:['TCP','UDP','ICMP','HTTP'], answer:1, explanation:'DHCP uses UDP ports 67 (server) and 68 (client).' },
+    { q:'First step in DHCP DORA?', options:['Offer','Discover','Request','Acknowledge'], answer:1, explanation:'Client broadcasts DHCP Discover.' },
+    { q:'Command to enable DHCP service?', options:['service dhcp','ip dhcp enable','ip dhcp on','dhcp active'], answer:0, explanation:'`service dhcp` enables the DHCP server process.' },
+    { q:'NAT translates...', options:['Private IPs to public','MAC to IP','DNS to IP','UDP to TCP'], answer:0, explanation:'NAT maps internal private addresses to public IPs.' },
+    { q:'PAT is also known as...', options:['Static NAT','Dynamic NAT','NAT overload','Double NAT'], answer:2, explanation:'Port Address Translation allows many-to-one mapping.' },
+    { q:'Command to show NAT translations?', options:['show ip nat translations','show nat','show ip route','show interface nat'], answer:0, explanation:'Displays active NAT table entries.' },
+    { q:'NTP uses which port?', options:['UDP 123','TCP 123','UDP 161','UDP 514'], answer:0, explanation:'NTP uses UDP port 123.' },
+    { q:'Purpose of NTP?', options:['Time synchronization','DNS resolution','QoS classification','Encryption'], answer:0, explanation:'Keeps time consistent across devices.' },
+    { q:'Syslog default port?', options:['514 UDP','161 UDP','23 TCP','67 UDP'], answer:0, explanation:'Syslog operates over UDP/514.' },
+    { q:'SNMP v3 adds...', options:['Encryption and authentication','Faster polling','IPv6 only support','QoS'], answer:0, explanation:'SNMPv3 adds security and encryption.' },
+    { q:'SNMP ports?', options:['161/162','22/23','443/80','67/68'], answer:0, explanation:'161 for queries, 162 for traps.' },
+    { q:'DNS purpose?', options:['Resolve names to IPs','Assign MACs','Encrypt data','Limit traffic'], answer:0, explanation:'DNS converts hostnames to IP addresses.' },
+    { q:'Command to set DNS server?', options:['ip name-server <ip>','dns server add <ip>','set dns <ip>','config dns <ip>'], answer:0, explanation:'Specifies upstream DNS servers.' },
+    { q:'QoS primary function?', options:['Prioritize traffic','Encrypt data','Create VLANs','Block ports'], answer:0, explanation:'Quality of Service manages traffic priority.' },
+    { q:'DHCP relay configuration command?', options:['ip helper-address <server IP>','relay dhcp <server>','ip dhcp relay <server>','set helper-address'], answer:0, explanation:'Forwards DHCP broadcasts to server.' },
+    { q:'Syslog severity 0 means...', options:['Emergency','Warning','Error','Critical'], answer:0, explanation:'Severity 0 = Emergency (highest priority).' },
+    { q:'Command to verify NTP status?', options:['show ntp status','show time','show clock','show ntp server'], answer:0, explanation:'Confirms NTP sync state and peer info.' },
+    { q:'SNMP manager role?', options:['Polls agents','Stores MIBs only','Sends traps','Authenticates clients'], answer:0, explanation:'SNMP manager queries agents for data.' },
+    { q:'SNMP agent role?', options:['Stores device data','Requests info','Authenticates','Encrypts traffic'], answer:0, explanation:'Agents maintain local MIB data.' },
+    { q:'Syslog severity 6 = ?', options:['Informational','Notice','Debug','Warning'], answer:0, explanation:'6 = informational messages.' },
+    { q:'Clear all NAT entries?', options:['clear ip nat translations *','reset nat','erase nat table','clear ip nat all'], answer:0, explanation:'Removes all active NAT mappings.' },
+    { q:'QoS classification identifies...', options:['Traffic types','Users','VLANs','Routers'], answer:0, explanation:'Classification groups traffic by type or priority.' },
+    { q:'Command to view SNMP configuration?', options:['show snmp','show snmp community','show snmp status','show community'], answer:0, explanation:'Displays SNMP setup and statistics.' },
+    { q:'DHCP lease renewal occurs at...', options:['50% lease time','60% lease time','75% lease time','90% lease time'], answer:0, explanation:'Client attempts renewal at 50% of lease time.' },
+    { q:'Syslog severity 7 means...', options:['Debugging','Informational','Warning','Critical'], answer:0, explanation:'7 = debugging (lowest priority).' },
+    { q:'NAT inside interface command?', options:['ip nat inside','nat inside enable','set inside nat','interface nat inside'], answer:0, explanation:'Used under inside-facing interface.' },
+    { q:'SNMP uses which transport?', options:['UDP','TCP','ICMP','HTTP'], answer:0, explanation:'SNMP uses UDP ports 161/162.' },
+    { q:'DNS record mapping hostname to IP?', options:['A record','CNAME','MX','TXT'], answer:0, explanation:'A record defines the IP of a host.' },
+    { q:'QoS shaping purpose?', options:['Smooth bursts','Encrypt traffic','Assign IPs','Enable NAT'], answer:0, explanation:'Shaping buffers traffic to control output rate.' }
+  ]
+};
