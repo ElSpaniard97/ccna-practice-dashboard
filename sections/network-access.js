@@ -1,2 +1,36 @@
-// Placeholder for network-access.js
-export const DATA = [];
+export const NETWORK_ACCESS = {
+  id: 'access',
+  title: 'Network Access',
+  items: [
+    { q:'Switch table used to forward frames?', options:['Routing Table','MAC Address Table','ARP Table','DNS Cache'], answer:1, explanation:'Switches use MAC tables to forward frames.' },
+    { q:'Unknown unicast frame behavior?', options:['Dropped','Flooded to all ports','Sent to router','Stored until learned'], answer:1, explanation:'Switch floods unknown unicasts except on source port.' },
+    { q:'Command to assign VLAN 10 to an interface?', options:['switchport access vlan 10','vlan 10','interface vlan 10','ip vlan 10'], answer:0, explanation:'Configured in interface mode: `switchport access vlan 10`.' },
+    { q:'Purpose of trunk link?', options:['Carry one VLAN','Carry multiple VLANs','Connect routers','Provide redundancy'], answer:1, explanation:'Trunks carry traffic from multiple VLANs.' },
+    { q:'Default VLAN for Cisco switches?', options:['0','1','10','100'], answer:1, explanation:'VLAN 1 is the default VLAN.' },
+    { q:'Protocol preventing loops?', options:['VTP','STP','DTP','LLDP'], answer:1, explanation:'Spanning Tree Protocol (STP) prevents broadcast loops.' },
+    { q:'Default STP priority?', options:['0','32768','4096','65535'], answer:1, explanation:'32768 is the default bridge priority.' },
+    { q:'Command to show VLANs quickly?', options:['show vlan brief','show interfaces','show vlan all','show trunk'], answer:0, explanation:'`show vlan brief` lists VLANs and member ports.' },
+    { q:'BPDU Guard purpose?', options:['Enable faster convergence','Err-disable PortFast ports receiving BPDUs','Block VLANs','Learn MAC faster'], answer:1, explanation:'Protects against connecting another switch on an access port.' },
+    { q:'Enable PortFast?', options:['spanning-tree portfast','portfast enable','enable portfast','stp fast'], answer:0, explanation:'Used on access ports to skip STP states.' },
+    { q:'802.11 standard using 5GHz only?', options:['a','b','g','n'], answer:0, explanation:'802.11a uses only 5GHz band.' },
+    { q:'Secure Wi-Fi standard?', options:['WEP','WPA','WPA2','WPA3'], answer:3, explanation:'WPA3 is the most secure modern standard.' },
+    { q:'STP root bridge determined by?', options:['Lowest MAC','Highest MAC','Lowest priority','Random'], answer:2, explanation:'Lowest Bridge ID = Priority + MAC.' },
+    { q:'Show trunk interfaces?', options:['show interfaces trunk','show trunk','show vlan trunk','show vlan all'], answer:0, explanation:'Displays active trunk ports.' },
+    { q:'EtherChannel benefit?', options:['Combine bandwidth','Add VLANs','Encrypt data','Loop prevention'], answer:0, explanation:'Bundles multiple links for redundancy and speed.' },
+    { q:'Wi-Fi SSID stands for?', options:['System Service ID','Service Set Identifier','Shared Security ID','Signal Source ID'], answer:1, explanation:'SSID identifies the wireless network name.' },
+    { q:'Purpose of native VLAN?', options:['Tags all frames','Carries untagged frames','Blocks unused VLANs','Stores MACs'], answer:1, explanation:'Untagged frames are assigned to native VLAN.' },
+    { q:'Default trunk encapsulation?', options:['ISL','802.1Q','PPP','MPLS'], answer:1, explanation:'802.1Q is Cisco’s standard for trunk tagging.' },
+    { q:'What is DTP?', options:['Dynamic Trunking Protocol','Data Transport Protocol','Device Trunk Path','Dynamic Tree Protocol'], answer:0, explanation:'Used to negotiate trunking on links.' },
+    { q:'Command to assign switch hostname?', options:['hostname Switch1','set name Switch1','device-name Switch1','config name Switch1'], answer:0, explanation:'Global config: `hostname Switch1`.' },
+    { q:'Access port definition?', options:['Carries multiple VLANs','Carries one VLAN','No VLAN','Native VLAN only'], answer:1, explanation:'Access ports belong to a single VLAN.' },
+    { q:'Wireless access point function?', options:['Repeats LAN signal','Bridges wireless to wired LAN','Routes traffic','Provides NAT'], answer:1, explanation:'AP connects wireless clients to LAN.' },
+    { q:'Root port selection in STP?', options:['Lowest path cost to root bridge','Highest bandwidth','Lowest MAC','Random'], answer:0, explanation:'Root port = lowest cost to root bridge.' },
+    { q:'Feature to combine switch ports?', options:['EtherChannel','BPDU Guard','PortFast','Port Security'], answer:0, explanation:'EtherChannel logically bundles interfaces.' },
+    { q:'Show learned MACs?', options:['show mac address-table','show arp','show vlan','show version'], answer:0, explanation:'Displays switch forwarding table.' },
+    { q:'VTP purpose?', options:['Synchronize VLANs','Spanning Tree','Trunk negotiation','Assign IPs'], answer:0, explanation:'VTP distributes VLAN configuration between switches.' },
+    { q:'Default VLAN for management?', options:['1','10','99','100'], answer:2, explanation:'Best practice: use VLAN 99 or custom VLAN for management.' },
+    { q:'Max copper Ethernet cable length?', options:['90m','100m','120m','150m'], answer:1, explanation:'Ethernet limit: 100 meters.' },
+    { q:'Command to create VLAN 20?', options:['vlan 20','add vlan 20','create vlan 20','set vlan 20'], answer:0, explanation:'Global mode: `vlan 20`.' },
+    { q:'STP variant with rapid convergence?', options:['STP','PVST','RSTP','CST'], answer:2, explanation:'RSTP (802.1w) converges faster.' }
+  ]
+};
